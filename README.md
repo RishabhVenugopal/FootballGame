@@ -16,7 +16,7 @@ The game is played on a virtual football pitch which is divided into six strips 
 | Midfield | Dribbling | Passing  |
 | Defence  | Defending | Physical |
 
-Once you choose the stats, they are locked in for the rest of the game, and you can then begin to play. You are free to play a card in whichever strip you choose, and the value of stat associated with that strip is added to your total score. For example, if I choose Dribbling as my midfield stat and play Lionel Messi, who has 94 dribbling, in the midfield, 94 will be added to your total score.
+Once you choose the stats, they are locked in for the rest of the game, and you can then begin to play. You are free to play a card in whichever strip you choose, and the value of stat associated with that strip is added to your total score. For example, if I choose Dribbling as my midfield stat and play Lionel Messi, who has 94 dribbling, in the midfield, 94 will be added to your total score. On the left side of the pitch, you can see all your players along with their best stats and each of the stats you have chosen. This will help you make your decision before you play a card.
 
 ## Source Files:
 Game.java: Class for the game entity stored in the database. Each Game contains a gameId, userId (id of the player), status(active or completed), userScore, cpuScore, and the chosen stats for each strip.
