@@ -10,7 +10,7 @@ All players start with 500 Million euros and can then build their squad as they 
 ### Playing the Game:
 The game is played on a virtual football pitch which is divided into six strips - 3 for you, and 3 for your opponent. The strip closest to the center is for Attackers, the one furthest from the center for the Defenders, and the one between them for Midfielders (Much like close, ranged, and siege combat cards in Gwent!). For each strip you must first choose one of two stats associated with it. Below are the stats associated with each strip.
 
-| 'Strip'  | 'Stat 1'  | 'Stat 2' |
+|  Strip   |  Stat 1   |  Stat 2  |
 |----------|-----------|----------|
 | Attack   | Pace      | Shooting |
 | Midfield | Dribbling | Passing  |
