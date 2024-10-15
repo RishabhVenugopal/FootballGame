@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: #212120;
+        }
+        .container {
+            position: relative;
+            width: 20%;
+            margin: auto;
+        }
+        a{
+            color: white;
+            font-family: Teko;
+        }
+        .navbar{
+            flex-direction: row;
+            justify-content: start;
+        }
+        .navbar-brand{
+            font-size: 2rem;
+        }
+        .nav-item{
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar" style="background-color: #2b2b2a">
+        <a class="navbar-brand" href="/">Gwent</a>
+        <a class="nav-item" href="/search">Search</a>
+    </div>
+    <div class="container">
+        <h3 style="font-family: Teko; color: white; margin-top: 10%;">Enter Login Details:</h3>
+    </div>
+    <div class="container">
+        <form action="/login" method="post">
+            <input name="UserName" class="form-control" placeholder="Username" style="border: 2px solid black; margin-top: 25%; background-color: #2b2b2a; color: white;">
+            <input name="password" class="form-control" placeholder="Password" style="border: 2px solid black; margin-top: 7%; background-color: #2b2b2a; color: white;">
+            <input type="submit" style="display: none;">
+            <a style="margin: top 50px; font-family: Teko; color: white; font-size: 30px;" href="/register">Register</a>
+        </form>
+    </div>
+    <div>
+        <h3 class="container" style="font-family: Teko; color: red; margin-top: 20px;" th:if="${wrongflag}">Wrong Username or Password</h3>
+    </div>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+        <meta charset="UTF-8">
+        <title>Game</title>
+        <style>
+            body {
+                height: 180vh;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                flex-direction: row;
+                background-color: #212120;
+            }
+            .pitch {
+                height: 162vh;
+                width: 50.6vw;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                border: 3px solid white;
+                margin-top: 2%;
+            }
+            .pitch-strip {
+                height: 33%;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+            }
+            select{
+                background-color: #2b2b2a;
+                font-family: Teko;
+                font-size: 1.25rem;
+                width: 100%;
+                color: white;
+                border-color: black;
+
+            }
+            table{
+                width: 100%;
+            }
+            th,td{
+                color: white;
+                font-family: Teko;
+                padding: 5px;
+            }
+            .tshirt{
+                margin: 2%;
+                width: 17%;
+                height: 55%;
+                display: flex;
+                flex-direction: row;
+            }
+            .sleeve{
+                height:33%;
+                width: 20%;
+                background-color: darkblue;
+            }
+            .torso{
+                height: 100%;
+                width: 60%;
+                background-color: darkblue;
+                font-family: Teko;
+                color: white;
+                font-size: large;
+                display: flex;
+                justify-content: center;
+            }
+            .scoreboard{
+                width: 100%;
+                background-color: #ebe7dd;
+                height: 10%;
+                border: 3px solid black;
+                border-radius: 4px;
+                display: flex;
+                flex-direction: row;
+            }
+            .scoreboard-left{
+                height: 100%;
+                width: 50%;
+                border-right: 1.5px solid black;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .scoreboard-right{
+                height: 100%;
+                width: 50%;
+                border-left: 1.5px solid black;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="display: flex; justify-content: flex-start; align-items: center; width: 20%; flex-direction: column; margin-top: 8%; margin-right: 5%;">
+            <div class="scoreboard">
+                <div class="scoreboard-left">
+                    <h3 style="font-family: Teko;">You:</h3>
+                    <h2 style="font-family: Teko; font-size: 50px;" th:text="${game.getUserScore()}"></h2>
+                </div>
+                <div class="scoreboard-right">
+                    <h3 style="font-family: Teko;">Opp:</h3>
+                    <h2 style="font-family: Teko; font-size: 50px;" th:text="${game.getCpuScore()}"></h2>
+                </div>
+            </div>
+            <form action="/game" method="post" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin: 2.5%; margin-top: 8%;">
+                <div style="display: flex; flex-direction: row-reverse; margin: 5%;">
+                    <div style="margin-left: 5%; width: 40%;">
+                        <select name="position" id="position">
+                            <option disabled selected>Pos.</option>
+                            <option value="attack">Attack</option>
+                            <option value="midfield">Midfield</option>
+                            <option value="defence">Defence</option>
+                        </select>
+                    </div>
+                    <div style="margin-right: 5%; width: 40%;">
+                        <select name="playerId" id="playerId">
+                            <option disabled selected>Player</option>
+                            <option th:each="player:${players}" th:text="${player.getShortName()}" th:value="${player.getId()}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin: 5%">
+                    <button type="submit" class="btn" style="background-color: green; color: white;">Confirm</button>
+                </div>
+                <h5 style="font-family: Teko; color: red" th:if="${foundFlag}">Player Already Used</h5>
+                <h5 style="font-family: Teko; color: red" th:if="${game.getAttackStat() == null || game.getDefenceStat() == null || game.getMidfieldStat() == null}">Choose Stats First</h5>
+            </form>
+            <table class="table-bordered" style="border-color: black; margin-top: 10px;">
+                <thead>
+                    <tr>
+                        <th style="font-size: 1.5rem; border-color: black">Name</th>
+                        <th style="font-size: 1.5rem; border-color: black">Best Stat</th>
+                        <th th:if="${game.getAttackStat() != null}" style="font-size: 1.5rem; border-color: black" th:text="${game.getAttackStat()}"></th>
+                        <th th:if="${game.getMidfieldStat() != null}" style="font-size: 1.5rem; border-color: black" th:text="${game.getMidfieldStat()}"></th>
+                        <th th:if="${game.getDefenceStat() != null}" style="font-size: 1.5rem; border-color: black" th:text="${game.getDefenceStat()}"></th>
+                    </tr>
+                    <tr th:each="player:${players}">
+                        <td th:text="${player.getShortName()}" style="border-color: black; font-size: 1.3rem;"></td>
+                        <td th:text="${player.getBestStat() + ': ' + player.getBestStatValue()}" style="border-color: black; font-size: 1.3rem;"></td>
+                        <td th:if="${game.getAttackStat() != null}" th:text="${player.getUsedStat(game.getAttackStat())}" style="border-color: black; font-size: 1.3rem;"></td>
+                        <td th:if="${game.getMidfieldStat() != null}" th:text="${player.getUsedStat(game.getMidfieldStat())}" style="border-color: black; font-size: 1.3rem;"></td>
+                        <td th:if="${game.getDefenceStat() != null}" th:text="${player.getUsedStat(game.getDefenceStat())}" style="border-color: black; font-size: 1.3rem;"></td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <h2 style="font-family: Teko; color: white; margin: 8px">Your Half</h2>
+            <div class="pitch">
+                <div class="pitch-strip" style="background-color: #04b822">
+                    <div class="tshirt" th:each="gamePlayer:${gamePlayers}" th:if="${playerFlag && gamePlayer.getPosition().equals('defence') && gamePlayer.getUserFlag()}">
+                        <div class="sleeve"></div>
+                        <div class="torso">
+                            <div style="margin-top: 10px;" th:text="${gamePlayer.getId().getPlayer().getShortName()}"></div>
+                        </div>
+                        <div class="sleeve"></div>
+                    </div>
+                </div>
+                <div class="pitch-strip" style="background-color: #078f1e">
+                    <div class="tshirt" th:each="gamePlayer:${gamePlayers}" th:if="${playerFlag && gamePlayer.getPosition().equals('midfield') && gamePlayer.getUserFlag()}">
+                        <div class="sleeve"></div>
+                        <div class="torso">
+                            <div style="margin-top: 10px;" th:text="${gamePlayer.getId().getPlayer().getShortName()}"></div>
+                        </div>
+                        <div class="sleeve"></div>
+                    </div>
+                </div>
+                <div class="pitch-strip" style="background-color: #04b822; border-bottom: 5px solid white;">
+                    <div class="tshirt" th:each="gamePlayer:${gamePlayers}" th:if="${playerFlag && gamePlayer.getPosition().equals('attack') && gamePlayer.getUserFlag()}">
+                        <div class="sleeve"></div>
+                        <div class="torso">
+                            <div style="margin-top: 10px;" th:text="${gamePlayer.getId().getPlayer().getShortName()}"></div>
+                        </div>
+                        <div class="sleeve"></div>
+                    </div>
+                </div>
+                <div class="pitch-strip" style="background-color: #078f1e; border-top: 5px solid white;">
+                    <div class="tshirt" th:each="gamePlayer:${gamePlayers}" th:if="${playerFlag && gamePlayer.getPosition().equals('attack') && !gamePlayer.getUserFlag()}">
+                        <div class="sleeve"></div>
+                        <div class="torso">
+                            <div style="margin-top: 10px;" th:text="${gamePlayer.getId().getPlayer().getShortName()}"></div>
+                        </div>
+                        <div class="sleeve"></div>
+                    </div>
+                </div>
+                <div class="pitch-strip" style="background-color: #04b822">
+                    <div class="tshirt" th:each="gamePlayer:${gamePlayers}" th:if="${playerFlag && gamePlayer.getPosition().equals('midfield') && !gamePlayer.getUserFlag()}">
+                        <div class="sleeve"></div>
+                        <div class="torso">
+                            <div style="margin-top: 10px;" th:text="${gamePlayer.getId().getPlayer().getShortName()}"></div>
+                        </div>
+                        <div class="sleeve"></div>
+                    </div>
+                </div>
+                <div class="pitch-strip" style="background-color: #078f1e">
+                    <div class="tshirt" th:each="gamePlayer:${gamePlayers}" th:if="${playerFlag && gamePlayer.getPosition().equals('defence') && !gamePlayer.getUserFlag()}">
+                        <div class="sleeve"></div>
+                        <div class="torso">
+                            <div style="margin-top: 10px;" th:text="${gamePlayer.getId().getPlayer().getShortName()}"></div>
+                        </div>
+                        <div class="sleeve"></div>
+                    </div>
+                </div>
+            </div>
+            <h2 style="font-family: Teko; color: white; margin: 12px">Opponent's Half</h2>
+        </div>
+        <div>
+            <form action="/game" method="post" style="display: flex; flex-direction: row; align-items: center; justify-content: center; margin-top: 20vh;">
+                <button name="defenceStat" id="defending" value="Defending" type="submit" class="btn btn-success" style="margin: 5px">Defending</button>
+                <button name="defenceStat" id="physical" value="Physical" type="submit" class="btn btn-success" style="margin: 5px">Physical</button>
+                <div th:if="${disableDefence}" id="disableDefence"></div>
+            </form>
+            <h4 style="font-family: Teko; color: white; margin-left: 0.6vw; margin-top: 1vh" th:text="${'Chosen Stat: ' + game.getDefenceStat()}"></h4>
+            <form action="/game" method="post" style="display: flex; flex-direction: row; align-items: center; justify-content: center; margin-top: 15vh;">
+                <button name="midfieldStat" id="dribbling" value="Dribbling" type="submit" class="btn btn-success" style="margin: 5px">Dribbling</button>
+                <button name="midfieldStat" id="passing" value="Passing" type="submit" class="btn btn-success" style="margin: 5px">Passing</button>
+                <div th:if="${disableMidfield}" id="disableMidfield"></div>
+            </form>
+            <h4 style="font-family: Teko; color: white; margin-left: 0.6vw; margin-top: 1vh" th:text="${'Chosen Stat: ' + game.getMidfieldStat()}"></h4>
+            <form action="/game" method="post" style="display: flex; flex-direction: row; align-items: center; justify-content: center; margin-top: 12.5vh;">
+                <button name="attackStat" id="shooting" value="Shooting" type="submit" class="btn btn-success" style="margin: 5px">Shooting</button>
+                <button name="attackStat" id="pace" value="Pace" type="submit" class="btn btn-success" style="margin: 5px">Pace</button>
+                <div th:if="${disableAttack}" id="disableAttack"></div>
+            </form>
+            <h4 style="font-family: Teko; color: white; margin-left: 0.6vw; margin-top: 1vh" th:text="${'Chosen Stat: ' + game.getAttackStat()}"></h4>
+        </div>
+        <div id="cpuTurn" th:if="${!playerTurn}"></div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(){
+                disableButtons();
+            });
+            function disableButtons(){
+                var dd = document.getElementById("disableDefence");
+                var dm = document.getElementById("disableMidfield");
+                var da = document.getElementById("disableAttack");
+                if (dd){
+                    document.getElementById("physical").disabled = true;
+                    document.getElementById("defending").disabled = true;
+                }
+                if (dm){
+                    document.getElementById("passing").disabled = true;
+                    document.getElementById("dribbling").disabled = true;
+                }
+                if (da){
+                    document.getElementById("shooting").disabled = true;
+                    document.getElementById("pace").disabled = true;
+                }
+            }
+            if (document.getElementById("cpuTurn")){
+                setTimeout(function(){
+                    location.reload();
+                }, 3000);
+            }
+        </script>
+    </body>
+</html>
